@@ -1,7 +1,20 @@
 name: build-dmg
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
+
+# 仅发布到 hanximeng/ani-rss，严禁推送到 wushuo894/ani-rss
+permissions:
+  contents: write
+
+# 与 build 工作流共用队列，避免同一 tag 的 Release 并发冲突
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: macos-latest

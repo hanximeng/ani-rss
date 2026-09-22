@@ -12,6 +12,11 @@ permissions:
   contents: write
   packages: write
 
+# 与 build-dmg 工作流共用队列，避免同一 tag 的 Release 并发冲突
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest

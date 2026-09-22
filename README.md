@@ -70,10 +70,6 @@ docker run -d \
   ghcr.io/hanximeng/ani-rss:latest
 ```
 
-> 首次推送的 ghcr 包默认为**私有**。若需匿名拉取，请到
-> `https://github.com/users/hanximeng/packages/container/ani-rss/settings`
-> 将可见性改为 **Public**；保持私有则拉取前需先 `docker login ghcr.io`。
-
 ### 其他安装方式
 
 除 Docker 外，也可直接从 [Releases](https://github.com/hanximeng/ani-rss/releases) 下载：
@@ -83,8 +79,6 @@ docker run -d \
 - `ani-rss.dmg` — macOS 安装包
 
 ## 其他
-
-[关于不接受“纯 AI 生成”的 Pull Request 的说明](https://github.com/hanximeng/ani-rss/discussions/685)
 
 ### 推广须知
 

@@ -104,7 +104,7 @@ public class BgmController extends BaseController {
                 "redirect_uri", bgmRedirectUri
         );
 
-        HttpReq.post("https://bgm.tv/oauth/access_token", bodyMap)
+        HttpReq.post(BgmUtil.getWebUrl("/oauth/access_token"), bodyMap)
                 .then(res -> {
                     HttpReq.assertStatus(res);
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);

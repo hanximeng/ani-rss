@@ -131,6 +131,8 @@ export let configData = {
     "subtitleIndependentFolderEnabled": false,
     "subtitleIndependentFolderName": "Subs",
     "bgmApi": "https://api.bgm.tv",
+    "bgmWebUrl": "https://bgm.tv",
+    "bgmImage": "https://lain.bgm.tv",
     "autoStart": false,
     "allowCors": false,
     "uuid": ""

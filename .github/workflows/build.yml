@@ -52,10 +52,10 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            wushuo894/ani-rss:latest
-            ghcr.io/wushuo894/ani-rss:latest
-            wushuo894/ani-rss:${{ env.version }}
-            ghcr.io/wushuo894/ani-rss:${{ env.version }}
+            hanximeng/ani-rss:latest
+            ghcr.io/hanximeng/ani-rss:latest
+            hanximeng/ani-rss:${{ env.version }}
+            ghcr.io/hanximeng/ani-rss:${{ env.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push Docker image (openj9)
@@ -66,9 +66,9 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            wushuo894/ani-rss:openj9
-            ghcr.io/wushuo894/ani-rss:openj9
-            wushuo894/ani-rss:${{ env.version }}-openj9
-            ghcr.io/wushuo894/ani-rss:${{ env.version }}-openj9
+            hanximeng/ani-rss:openj9
+            ghcr.io/hanximeng/ani-rss:openj9
+            hanximeng/ani-rss:${{ env.version }}-openj9
+            ghcr.io/hanximeng/ani-rss:${{ env.version }}-openj9
           cache-from: type=gha
           cache-to: type=gha,mode=max

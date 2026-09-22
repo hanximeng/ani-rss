@@ -13,7 +13,7 @@ UPDATE_EXE_FILE="ani-rss-update.exe"
 
 if [ ! -e ${UPDATE_EXE_FILE} ]; then
   echo -e "${YELLOW}下载 ${UPDATE_EXE_FILE}${NC}"
-  curl -L https://github.com/wushuo894/ani-rss-update/releases/download/latest/ani-rss-update.exe -o ${UPDATE_EXE_FILE}
+  curl -L https://github.com/hanximeng/ani-rss-update/releases/download/latest/ani-rss-update.exe -o ${UPDATE_EXE_FILE}
   if [ $? -eq 1 ]; then
     echo -e "${RED}下载失败 ${UPDATE_EXE_FILE}${NC}"
     exit 1

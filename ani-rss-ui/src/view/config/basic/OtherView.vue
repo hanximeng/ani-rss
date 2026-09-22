@@ -19,6 +19,9 @@
       </div>
     </div>
   </SettingsItem>
+  <SettingsItem label="GitHub加速">
+    <el-input v-model="props.config['githubProxyUrl']" clearable placeholder="https://gh-proxy.org/"/>
+  </SettingsItem>
   <SettingsItem label="最大日志条数">
     <div class="width-150">
       <el-select v-model:model-value="props.config.logsMax">

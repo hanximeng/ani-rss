@@ -283,6 +283,66 @@ public class NotificationConfig implements Serializable {
     @Schema(description = "Bark Volume")
     private Integer barkVolume;
 
+    @Schema(description = "钉钉 Webhook")
+    private String dingTalkWebhook;
+
+    @Schema(description = "钉钉 加签密钥")
+    private String dingTalkSecret;
+
+    @Schema(description = "钉钉 消息类型 markdown/text")
+    private String dingTalkMsgType;
+
+    @Schema(description = "钉钉 @手机号")
+    private List<String> dingTalkAtMobiles;
+
+    @Schema(description = "钉钉 @所有人")
+    private Boolean dingTalkAtAll;
+
+    @Schema(description = "钉钉 发送图片")
+    private Boolean dingTalkImage;
+
+    @Schema(description = "企业微信 Webhook")
+    private String weComWebhook;
+
+    @Schema(description = "企业微信 消息类型 markdown/text")
+    private String weComMsgType;
+
+    @Schema(description = "企业微信 @手机号")
+    private List<String> weComAtMobiles;
+
+    @Schema(description = "企业微信 @所有人")
+    private Boolean weComAtAll;
+
+    @Schema(description = "企业微信 发送图片")
+    private Boolean weComImage;
+
+    @Schema(description = "OneBot Api 地址")
+    private String oneBotApi;
+
+    @Schema(description = "OneBot AccessToken")
+    private String oneBotAccessToken;
+
+    @Schema(description = "OneBot 消息类型 private/group")
+    private String oneBotMessageType;
+
+    @Schema(description = "OneBot 用户QQ")
+    private String oneBotUserId;
+
+    @Schema(description = "OneBot 群号")
+    private String oneBotGroupId;
+
+    @Schema(description = "OneBot 发送图片")
+    private Boolean oneBotImage;
+
+    @Schema(description = "飞书 Webhook")
+    private String feishuWebhook;
+
+    @Schema(description = "飞书 加签密钥")
+    private String feishuSecret;
+
+    @Schema(description = "飞书 消息类型 text/post")
+    private String feishuMsgType;
+
     /**
      * 通知 状态
      */
@@ -380,6 +440,38 @@ public class NotificationConfig implements Serializable {
                 .setBarkUseMarkdown(false)
                 .setBarkLevel("active")
                 .setBarkVolume(5);
+
+        // 钉钉
+        notificationConfig
+                .setDingTalkWebhook("")
+                .setDingTalkSecret("")
+                .setDingTalkMsgType("markdown")
+                .setDingTalkAtMobiles(new ArrayList<>())
+                .setDingTalkAtAll(false)
+                .setDingTalkImage(true);
+
+        // 企业微信
+        notificationConfig
+                .setWeComWebhook("")
+                .setWeComMsgType("markdown")
+                .setWeComAtMobiles(new ArrayList<>())
+                .setWeComAtAll(false)
+                .setWeComImage(true);
+
+        // OneBot
+        notificationConfig
+                .setOneBotApi("http://127.0.0.1:3000")
+                .setOneBotAccessToken("")
+                .setOneBotMessageType("private")
+                .setOneBotUserId("")
+                .setOneBotGroupId("")
+                .setOneBotImage(true);
+
+        // 飞书
+        notificationConfig
+                .setFeishuWebhook("")
+                .setFeishuSecret("")
+                .setFeishuMsgType("text");
 
         return notificationConfig;
     }

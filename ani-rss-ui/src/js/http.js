@@ -1,12 +1,18 @@
 import api from "@/js/api.js";
 import {md5} from "js-md5";
-import {base64Encode} from "./global.js";
+import {base64Encode, bgmWebUrl} from "./global.js";
 
 /**
  * 获取设置
  * @returns {Promise<unknown>}
  */
-export let config = () => api.post('api/config')
+export let config = () => api.post('api/config').then(res => {
+  const data = res.data
+  if (data && data['bgmWebUrl']) {
+    bgmWebUrl.value = data['bgmWebUrl']
+  }
+  return res
+})
 
 /**
  * 修改设置

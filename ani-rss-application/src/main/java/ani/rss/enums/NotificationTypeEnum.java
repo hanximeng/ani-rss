@@ -13,5 +13,9 @@ public enum NotificationTypeEnum {
     SHELL,
     FILE_MOVE,
     OPEN_LIST_UPLOAD,
-    BARK
+    BARK,
+    DING_TALK,
+    WE_COM,
+    ONE_BOT,
+    FEISHU
 }

@@ -33,6 +33,10 @@
       <ShellNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <FileMoveNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <OpenListUploadNotificationView v-model:config="props.config" v-model:notification-config="notificationConfig"/>
+      <DingTalkNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+      <WeComNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+      <OneBotNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+      <FeishuNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <SettingsItem label="顺序">
         <div>
           <el-input-number
@@ -78,6 +82,10 @@ import FileMoveNotificationView from "./notification/FileMoveNotificationView.vu
 import OpenListUploadNotificationView from "./notification/OpenListUploadNotificationView.vue";
 import {testNotification} from "@/js/http.js";
 import BarkNotificationView from "./notification/BarkNotificationView.vue";
+import DingTalkNotificationView from "./notification/DingTalkNotificationView.vue";
+import WeComNotificationView from "./notification/WeComNotificationView.vue";
+import OneBotNotificationView from "./notification/OneBotNotificationView.vue";
+import FeishuNotificationView from "./notification/FeishuNotificationView.vue";
 
 
 let notificationConfig = ref({

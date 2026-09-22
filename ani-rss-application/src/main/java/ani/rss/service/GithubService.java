@@ -109,13 +109,34 @@ public class GithubService {
 
             updateInfo
                     .setUpdate(update)
-                    .setDownloadUrl(asset.getBrowserDownloadUrl())
+                    .setDownloadUrl(getDownloadUrl(asset.getBrowserDownloadUrl()))
                     .setSha256(sha256)
                     .setSize(size)
                     .setFormatSize(formatSize);
         }
 
         return updateInfo;
+    }
+
+    /**
+     * 获取加速后的下载链接
+     *
+     * @param url 原始下载链接
+     * @return 加速后的下载链接
+     */
+    private String getDownloadUrl(String url) {
+        String githubProxyUrl = ConfigUtil.CONFIG.getGithubProxyUrl();
+        if (StrUtil.isBlank(githubProxyUrl)) {
+            return url;
+        }
+        if (!StrUtil.startWithAny(url,
+                "https://github.com/",
+                "http://github.com/",
+                "https://raw.githubusercontent.com/",
+                "http://raw.githubusercontent.com/")) {
+            return url;
+        }
+        return StrUtil.addSuffixIfNot(githubProxyUrl, "/") + url;
     }
 
 }

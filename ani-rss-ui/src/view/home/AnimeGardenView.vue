@@ -138,7 +138,7 @@ import {ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy} from "@element-plus/icons-vue";
 import * as http from "@/js/http.js";
-import {proxyImage} from "@/js/global.js";
+import {bgmWebUrl, proxyImage} from "@/js/global.js";
 import {fromNow} from "@/js/format.js";
 
 // 批量添加订阅
@@ -218,7 +218,7 @@ let callback = v => {
   let {bgmId, rss, name} = v
   regexList.value = JSON.parse(JSON.stringify(v.groupRegex.regexList))
 
-  addAni.value.bgmUrl = `https://bgm.tv/subject/${bgmId}`
+  addAni.value.bgmUrl = `${bgmWebUrl.value}/subject/${bgmId}`
   addAni.value.url = rss
   addAni.value.subgroup = name
   addAni.value.match = '[]'
@@ -269,7 +269,7 @@ let batchAddition = async () => {
         "totalEpisodeNumber": 0,
         "match": [],
         "type": "anime-garden",
-        "bgmUrl": `https://bgm.tv/subject/${item[0].bgmId}`,
+        "bgmUrl": `${bgmWebUrl.value}/subject/${item[0].bgmId}`,
         "subgroup": item[0].name
       }
 

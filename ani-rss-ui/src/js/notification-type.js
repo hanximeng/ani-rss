@@ -38,6 +38,22 @@ export let notificationTypeList = [
     {
         name: 'OPEN_LIST_UPLOAD',
         label: 'OpenList上传'
+    },
+    {
+        name: 'DING_TALK',
+        label: '钉钉通知'
+    },
+    {
+        name: 'WE_COM',
+        label: '企业微信'
+    },
+    {
+        name: 'ONE_BOT',
+        label: 'OneBot'
+    },
+    {
+        name: 'FEISHU',
+        label: '飞书通知'
     }
 ]
 

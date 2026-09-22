@@ -3,6 +3,12 @@
   <SettingsItem label="BgmApi">
     <el-input v-model:model-value="props.config['bgmApi']" placeholder="https://api.bgm.tv"/>
   </SettingsItem>
+  <SettingsItem label="Bgm主站">
+    <el-input v-model:model-value="props.config['bgmWebUrl']" placeholder="https://bgm.tv"/>
+  </SettingsItem>
+  <SettingsItem label="Bgm图片">
+    <el-input v-model:model-value="props.config['bgmImage']" placeholder="https://lain.bgm.tv"/>
+  </SettingsItem>
   <SettingsItem label="获取方式">
     <el-radio-group v-model="props.config['bgmTokenType']">
       <el-radio label="手动输入" value="INPUT"/>
@@ -62,7 +68,7 @@
             class="text-extra-small"
             type="primary"
             target="_blank"
-            href="https://bgm.tv/dev/app">
+            :href="`${props.config['bgmWebUrl']}/dev/app`">
           Bangumi 开发者平台
         </el-link>
         &nbsp;设置你自己的应用
@@ -124,7 +130,7 @@ let start = () => {
   setConfig(props.config)
       .then(async res => {
         let redirect = window.encodeURI(props.config['bgmRedirectUri'])
-        let url = `https://bgm.tv/oauth/authorize?client_id=${props.config['bgmAppID']}&response_type=code&redirect_uri=${redirect}`
+        let url = `${props.config['bgmWebUrl']}/oauth/authorize?client_id=${props.config['bgmAppID']}&response_type=code&redirect_uri=${redirect}`
         window.open(url)
         location.reload()
       })

@@ -153,7 +153,7 @@ public class AniUtil {
                 break;
             case "ani-bt":
                 if (paramMap.containsKey("bgmId")) {
-                    String bgmUrl = "https://bgm.tv/subject/" + paramMap.get("bgmId");
+                    String bgmUrl = BgmUtil.getWebUrl("/subject/" + paramMap.get("bgmId"));
                     ani.setBgmUrl(bgmUrl);
                 }
 
@@ -165,7 +165,7 @@ public class AniUtil {
                 break;
             case "anime-garden":
                 if (paramMap.containsKey("subject")) {
-                    String bgmUrl = "https://bgm.tv/subject/" + paramMap.get("subject");
+                    String bgmUrl = BgmUtil.getWebUrl("/subject/" + paramMap.get("subject"));
                     ani.setBgmUrl(bgmUrl);
                 }
                 if (paramMap.containsKey("fansub")) {

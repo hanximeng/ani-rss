@@ -599,6 +599,12 @@ public class Config implements Serializable {
     private String githubToken;
 
     /**
+     * GitHub 加速地址
+     */
+    @Schema(description = "GitHub加速地址")
+    private String githubProxyUrl;
+
+    /**
      * 自动更新总集数信息
      */
     @Schema(description = "自动更新总集数信息")
@@ -722,6 +728,12 @@ public class Config implements Serializable {
 
     @Schema(description = "bgmApi")
     private String bgmApi;
+
+    @Schema(description = "bgm 主站地址")
+    private String bgmWebUrl;
+
+    @Schema(description = "bgm 图片地址")
+    private String bgmImage;
 
     @Schema(description = "开机自启动")
     private Boolean autoStart;

@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import {coverClickAction, showLastDownloadTime, showPlaylist, showScore, toApiFile} from "@/js/global.js";
+import {bgmWebUrl, coverClickAction, showLastDownloadTime, showPlaylist, showScore, toApiFile} from "@/js/global.js";
 import {Delete, Edit as EditIcon, Files, Picture} from "@element-plus/icons-vue";
 
 let openBgmUrl = (it) => {
@@ -108,7 +108,7 @@ let openBgmUrl = (it) => {
   if (it.title?.length) {
     let title = it.title.replace(/ ?\((19|20)\d{2}\)/g, "").trim()
     title = title.replace(/ ?\[tmdbid=(\d+)]/g, "").trim()
-    window.open(`https://bgm.tv/subject_search/${encodeURIComponent(title)}?cat=2`, '_blank', 'noopener')
+    window.open(`${bgmWebUrl.value}/subject_search/${encodeURIComponent(title)}?cat=2`, '_blank', 'noopener')
   }
 }
 

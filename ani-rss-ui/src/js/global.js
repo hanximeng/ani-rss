@@ -15,6 +15,11 @@ let rememberThePassword = useLocalStorage('rememberThePassword', {
 const authorization = useLocalStorage('authorization', '')
 
 /**
+ * bgm 主站地址
+ */
+const bgmWebUrl = useLocalStorage('bgm-web-url', 'https://bgm.tv')
+
+/**
  * 主题管理
  */
 const {store} = useColorMode()
@@ -157,6 +162,7 @@ const toApiFile = filename => {
 export {
     rememberThePassword,
     authorization,
+    bgmWebUrl,
     store,
     maxContentWidth,
     showScore,

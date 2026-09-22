@@ -200,6 +200,7 @@ public class ConfigUtil {
                 .setProcrastinating(false)
                 .setProcrastinatingDay(14)
                 .setGithubToken("")
+                .setGithubProxyUrl("https://gh-proxy.org/")
                 .setUpdateTotalEpisodeNumber(false)
                 .setForceUpdateTotalEpisodeNumber(false)
                 .setOpenListDownloadTimeout(60)
@@ -226,6 +227,8 @@ public class ConfigUtil {
                 .setSubtitleIndependentFolderEnabled(false)
                 .setSubtitleIndependentFolderName("Subs")
                 .setBgmApi("https://api.bgm.tv")
+                .setBgmWebUrl("https://bgm.tv")
+                .setBgmImage("https://lain.bgm.tv")
                 .setAutoStart(false)
                 .setAllowCors(false)
                 .setUuid(UUID.randomUUID().toString())
@@ -352,7 +355,10 @@ public class ConfigUtil {
         List<Func1<Config, String>> func1List = List.of(
                 Config::getDownloadToolHost,
                 Config::getMikanHost,
-                Config::getTmdbApi
+                Config::getTmdbApi,
+                Config::getBgmApi,
+                Config::getBgmWebUrl,
+                Config::getBgmImage
         );
 
         DynaBean dynaBean = DynaBean.create(config);

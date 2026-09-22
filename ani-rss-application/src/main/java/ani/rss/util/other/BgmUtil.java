@@ -273,6 +273,15 @@ public class BgmUtil {
                     return GsonStatic.fromJson(res.body(), BgmMe.class);
                 });
 
+        // 替换主站与图片镜像地址
+        BgmMe.Avatar avatar = bgmMe.getAvatar();
+        if (Objects.nonNull(avatar)) {
+            avatar.setLarge(getImageUrl(avatar.getLarge()))
+                    .setMedium(getImageUrl(avatar.getMedium()))
+                    .setSmall(getImageUrl(avatar.getSmall()));
+        }
+        bgmMe.setUrl(replaceWebHost(bgmMe.getUrl()));
+
         CacheUtils.put(key, GsonStatic.toJson(bgmMe), TimeUnit.MINUTES.toMillis(10));
         return bgmMe;
     }
@@ -619,6 +628,62 @@ public class BgmUtil {
     }
 
     /**
+     * 获取 bgm 主站地址
+     *
+     * @param path 路径
+     * @return 完整地址
+     */
+    public static String getWebUrl(String path) {
+        String bgmWebUrl = StrUtil.blankToDefault(CONFIG.getBgmWebUrl(), "https://bgm.tv");
+        return StrUtil.removeSuffix(bgmWebUrl, "/") + path;
+    }
+
+    /**
+     * 替换图片镜像地址
+     *
+     * @param url 图片地址
+     * @return 替换后的图片地址
+     */
+    public static String getImageUrl(String url) {
+        if (StrUtil.isBlank(url)) {
+            return url;
+        }
+        String bgmImage = CONFIG.getBgmImage();
+        if (StrUtil.isBlank(bgmImage)) {
+            return url;
+        }
+        bgmImage = StrUtil.removeSuffix(bgmImage, "/");
+        for (String host : List.of("https://lain.bgm.tv", "http://lain.bgm.tv")) {
+            if (StrUtil.startWithIgnoreCase(url, host)) {
+                return bgmImage + url.substring(host.length());
+            }
+        }
+        return url;
+    }
+
+    /**
+     * 替换主站镜像地址
+     *
+     * @param url 地址
+     * @return 替换后的地址
+     */
+    public static String replaceWebHost(String url) {
+        if (StrUtil.isBlank(url)) {
+            return url;
+        }
+        for (String host : List.of("https://bgm.tv", "http://bgm.tv")) {
+            if (!StrUtil.startWithIgnoreCase(url, host)) {
+                continue;
+            }
+            if (url.length() > host.length() && url.charAt(host.length()) != '/') {
+                continue;
+            }
+            return getWebUrl(url.substring(host.length()));
+        }
+        return url;
+    }
+
+    /**
      * 设置token
      *
      * @param httpRequest HttpRequest
@@ -645,7 +710,7 @@ public class BgmUtil {
         if (StrUtil.isBlank(bgmToken)) {
             return 0;
         }
-        long expires = HttpReq.post("https://bgm.tv/oauth/token_status")
+        long expires = HttpReq.post(getWebUrl("/oauth/token_status"))
                 .form("access_token", bgmToken)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
@@ -709,7 +774,7 @@ public class BgmUtil {
                 "redirect_uri", bgmRedirectUri
         );
 
-        HttpReq.post("https://bgm.tv/oauth/access_token", bodyMap)
+        HttpReq.post(getWebUrl("/oauth/access_token"), bodyMap)
                 .then(res -> {
                     HttpReq.assertStatus(res);
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
@@ -825,7 +890,7 @@ public class BgmUtil {
 
         BgmInfo.Images images = bgmInfo.getImages();
 
-        String image = (String) ReflectUtil.getFieldValue(images, bgmImageSize);
+        String image = getImageUrl((String) ReflectUtil.getFieldValue(images, bgmImageSize));
 
         double score = Optional.ofNullable(bgmInfo.getRating())
                 .map(BgmInfo.Rating::getScore)
@@ -838,7 +903,7 @@ public class BgmUtil {
         Date date = bgmInfo.getDate();
 
         ani
-                .setBgmUrl("https://bgm.tv/subject/" + bgmInfo.getId())
+                .setBgmUrl(getWebUrl("/subject/" + bgmInfo.getId()))
                 // 标题
                 .setTitle(title)
                 .setJpTitle(bgmInfo.getName())

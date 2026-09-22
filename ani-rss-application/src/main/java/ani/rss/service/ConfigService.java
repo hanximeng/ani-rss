@@ -26,6 +26,7 @@ import cn.hutool.http.HttpRequest;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +47,10 @@ public class ConfigService {
     @Resource
     private TaskService taskService;
 
-    @Resource
+    /**
+     * 构建时未生成 git.properties 的情况下该 bean 可能不存在
+     */
+    @Autowired(required = false)
     private GitProperties gitProperties;
 
     public Config config() {
@@ -59,6 +63,13 @@ public class ConfigService {
     }
 
     public GitInfo getGitInfo() {
+        if (Objects.isNull(gitProperties)) {
+            // 无 git 信息
+            return new GitInfo()
+                    .setBranch("")
+                    .setShortCommitId("")
+                    .setCommitId("");
+        }
         return new GitInfo()
                 .setBranch(gitProperties.getBranch())
                 .setShortCommitId(gitProperties.getShortCommitId())

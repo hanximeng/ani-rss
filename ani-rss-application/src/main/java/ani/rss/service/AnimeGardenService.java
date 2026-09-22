@@ -45,7 +45,7 @@ public class AnimeGardenService {
             AnimeGarden.Subject subject = new AnimeGarden.Subject();
             subject.setName(name)
                     .setId(bgmId)
-                    .setCover(images.getSmall())
+                    .setCover(BgmUtil.getImageUrl(images.getSmall()))
                     .setExists(true);
 
             week.setWeekLabel("搜索")
@@ -82,7 +82,7 @@ public class AnimeGardenService {
 
                     String cover = Optional.ofNullable(bgmCover.get(id))
                             .map(it -> GsonStatic.fromJson(it, BgmInfo.Images.class))
-                            .map(BgmInfo.Images::getSmall)
+                            .map(images -> BgmUtil.getImageUrl(images.getSmall()))
                             .orElse("");
 
                     boolean exists = bgmIdList.contains(subject.getId());

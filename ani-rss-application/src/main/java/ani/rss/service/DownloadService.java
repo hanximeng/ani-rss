@@ -51,8 +51,18 @@ public class DownloadService {
      *
      * @param ani 订阅
      */
-    @Synchronized("LOCK")
     public void downloadAni(Ani ani) {
+        downloadAni(ani, false);
+    }
+
+    /**
+     * 下载动漫
+     *
+     * @param ani       订阅
+     * @param replenish 是否补齐缺失集（为 true 时忽略 "只下载最新集" 限制）
+     */
+    @Synchronized("LOCK")
+    public void downloadAni(Ani ani, Boolean replenish) {
         Boolean delete = CONFIG.getDelete();
         Boolean autoDisabled = CONFIG.getAutoDisabled();
         Integer downloadCount = CONFIG.getDownloadCount();
@@ -61,7 +71,8 @@ public class DownloadService {
 
         String title = ani.getTitle();
         Integer season = ani.getSeason();
-        Boolean downloadNew = ani.getDownloadNew();
+        // 补齐缺失集时忽略 "只下载最新集"
+        Boolean downloadNew = ani.getDownloadNew() && !Boolean.TRUE.equals(replenish);
         List<Double> notDownload = ani.getNotDownload();
 
         List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();

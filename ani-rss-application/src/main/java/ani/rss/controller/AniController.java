@@ -114,6 +114,18 @@ public class AniController extends BaseController {
     }
 
     @Auth
+    @Operation(summary = "补齐缺失集")
+    @PostMapping("/replenishMissingEpisodes")
+    public Result<Map<String, Object>> replenishMissingEpisodes(@RequestBody Ani ani) {
+        Map<String, Object> map = aniService.replenishMissingEpisodes(ani);
+        List<?> missing = (List<?>) map.get("missing");
+        if (missing.isEmpty()) {
+            return Result.success(r -> r.setMessage("没有需要补齐的集数").setData(map));
+        }
+        return Result.success(r -> r.setMessage("已开始补齐 " + missing.size() + " 集").setData(map));
+    }
+
+    @Auth
     @Operation(summary = "获取订阅的下载位置")
     @PostMapping("/downloadPath")
     public Result<Map<String, Object>> downloadPath(@RequestBody Ani ani) {

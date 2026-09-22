@@ -125,6 +125,13 @@ export let rssToAni = (ani) => api.post('api/rssToAni', ani)
 export let previewAni = (ani) => api.post('api/previewAni', ani)
 
 /**
+ * 补齐缺失集
+ * @param ani 订阅
+ * @returns {Promise<unknown>}
+ */
+export let replenishMissingEpisodes = (ani) => api.post('api/replenishMissingEpisodes', ani)
+
+/**
  * 日志
  * @returns {Promise<unknown>}
  */

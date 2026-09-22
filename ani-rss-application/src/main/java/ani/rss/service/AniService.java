@@ -9,6 +9,7 @@ import ani.rss.entity.dto.IdDTO;
 import ani.rss.entity.dto.ImportAniDataDTO;
 import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.enums.AniSortTypeEnum;
+import ani.rss.enums.StringEnum;
 import ani.rss.task.RssTask;
 import ani.rss.util.other.*;
 import cn.hutool.core.bean.BeanUtil;
@@ -20,6 +21,8 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -391,6 +394,117 @@ public class AniService {
                 "items", items,
                 "omitList", omitList
         );
+    }
+
+    /**
+     * 补齐缺失集
+     *
+     * <p>预览中的 "已下载" 优先依据种子缓存判定（避免频繁唤醒机械硬盘），
+     * 视频文件被删除后缓存仍会残留，导致预览与播放列表不一致。
+     * 此方法按真实下载目录扫描，找出已标记但文件已丢失的集数，
+     * 清理其失效的种子缓存并重新下载。</p>
+     *
+     * @param ani 订阅
+     * @return 处理结果
+     */
+    public Map<String, Object> replenishMissingEpisodes(Ani ani) {
+        Optional<Ani> first = AniUtil.ANI_LIST
+                .stream()
+                .filter(it -> it.getId().equals(ani.getId()))
+                .findFirst();
+        Assert.isTrue(first.isPresent(), "订阅不存在");
+        Ani current = first.get();
+
+        List<Item> items = ItemsUtil.getItems(current);
+
+        Set<Double> existing = getExistingEpisodes(current, items);
+        List<Double> notDownload = CollUtil.emptyIfNull(current.getNotDownload());
+
+        List<Double> missing = new ArrayList<>();
+        List<Double> skipNotDownload = new ArrayList<>();
+
+        for (Item item : items) {
+            Double episode = item.getEpisode();
+            if (existing.contains(episode)) {
+                continue;
+            }
+            if (notDownload.contains(episode)) {
+                // 已被禁止下载的集数不进行补齐
+                skipNotDownload.add(episode);
+                continue;
+            }
+            // 清理失效的种子缓存, 否则下载时会因缓存存在而跳过
+            FileUtil.del(TorrentUtil.getTorrent(current, item));
+            missing.add(episode);
+        }
+
+        Collections.sort(missing);
+
+        if (!missing.isEmpty()) {
+            // 强制补齐, 忽略 "只下载最新集" 限制
+            ThreadUtil.execute(() -> {
+                try {
+                    RssTask.syncDownload(List.of(current), true);
+                } catch (Exception e) {
+                    String message = ExceptionUtils.getMessage(e);
+                    log.error(message, e);
+                }
+            });
+        }
+
+        log.info("{} 缺失集数 {} 个 {}", current.getTitle(), missing.size(), missing);
+
+        return Map.of(
+                "missing", missing,
+                "skipNotDownload", skipNotDownload,
+                "downloadPath", downloadService.getDownloadPath(current)
+        );
+    }
+
+    /**
+     * 获取下载目录中真实存在的集数
+     *
+     * @param ani   订阅
+     * @param items 资源列表
+     * @return 集数集合
+     */
+    private Set<Double> getExistingEpisodes(Ani ani, List<Item> items) {
+        Set<Double> episodes = new HashSet<>();
+
+        List<File> files = FileUtils.listFileList(downloadService.getDownloadPath(ani))
+                .stream()
+                .filter(file -> FileUtils.isVideoFormat(file.getName()))
+                .toList();
+
+        if (files.isEmpty()) {
+            return episodes;
+        }
+
+        if (Boolean.TRUE.equals(ani.getOva())) {
+            // 剧场版 只要存在视频即视为已下载
+            items.forEach(item -> episodes.add(item.getEpisode()));
+            return episodes;
+        }
+
+        int season = ani.getSeason();
+
+        for (File file : files) {
+            String fileName = file.getName();
+            if (!ReUtil.contains(StringEnum.SEASON_REG, fileName)) {
+                continue;
+            }
+            String seasonStr = ReUtil.get(StringEnum.SEASON_REG, fileName, 1);
+            String episodeStr = ReUtil.get(StringEnum.SEASON_REG, fileName, 2);
+            if (StrUtil.isBlank(seasonStr) || StrUtil.isBlank(episodeStr)) {
+                continue;
+            }
+            if (season != Integer.parseInt(seasonStr)) {
+                continue;
+            }
+            episodes.add(Double.parseDouble(episodeStr));
+        }
+
+        return episodes;
     }
 
     public Map<String, Object> downloadPath(Ani ani) {

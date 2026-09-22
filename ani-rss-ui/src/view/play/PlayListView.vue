@@ -31,26 +31,37 @@
         </div>
         <div class="bottom-spacer"></div>
       </el-scrollbar>
-      <div>
-        <p class="total-text">共 {{ list.length }} 项</p>
-      </div>
     </div>
     <div class="content" v-else>
       <el-text type="danger">
-        未下载集数或 docker 映射存在问题
+        未检测到已下载的剧集
       </el-text>
+    </div>
+    <div class="play-list-footer">
+      <span class="total-text">共 {{ list.length }} 项</span>
+      <el-button
+          :loading="replenishLoading"
+          bg
+          icon="MagicStick"
+          text
+          type="warning"
+          @click="replenish">
+        补齐缺失集
+      </el-button>
     </div>
   </el-dialog>
 </template>
 
 <script setup>
 import {ref} from "vue";
+import {ElMessage} from "element-plus";
 import PlayStartView from "./PlayStartView.vue";
 import {fromNow} from "@/js/format.js";
 import * as http from "@/js/http.js";
 
 const dialogVisible = ref(false)
 const listLoading = ref(false)
+const replenishLoading = ref(false)
 const list = ref([])
 
 let ani = ref({})
@@ -60,12 +71,9 @@ let playStartShow = (it) => {
   playStartRef.value?.show(JSON.parse(JSON.stringify(it)))
 }
 
-const show = (it) => {
-  ani.value = it
+const refresh = () => {
   listLoading.value = true
-  list.value = []
-  dialogVisible.value = true
-  http.playList(it)
+  return http.playList(ani.value)
       .then(res => {
         list.value = res.data.map(it => {
           return {...it, lastModifyFormat: fromNow(it['lastModify'])}
@@ -74,6 +82,24 @@ const show = (it) => {
       .finally(() => {
         listLoading.value = false
       })
+}
+
+const replenish = async () => {
+  replenishLoading.value = true
+  try {
+    const res = await http.replenishMissingEpisodes(ani.value)
+    ElMessage.success(res.message)
+    await refresh()
+  } finally {
+    replenishLoading.value = false
+  }
+}
+
+const show = (it) => {
+  ani.value = it
+  list.value = []
+  dialogVisible.value = true
+  refresh()
 }
 
 defineExpose({
@@ -114,5 +140,11 @@ defineExpose({
 .total-text {
   margin: 6px;
   text-align: end;
+}
+
+.play-list-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

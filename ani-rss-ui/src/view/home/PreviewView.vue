@@ -17,6 +17,13 @@
         <el-input v-model="previewData.downloadPath" readonly/>
       </div>
       <div class="items-button-container">
+        <el-button
+            :loading="replenishLoading"
+            icon="MagicStick"
+            type="warning"
+            @click="replenish">
+          补齐缺失集
+        </el-button>
         <el-button :disabled="!selectedItems.length" icon="Check" type="primary" @click="allowDownload">允许下载
         </el-button>
         <el-button :disabled="!selectedItems.length" icon="Close" @click="forbidDownload">禁止下载</el-button>
@@ -154,6 +161,7 @@ const createEmptyPreview = () => ({
 const dialogVisible = ref(false)
 const loading = ref(false)
 const deleteLoading = ref(false)
+const replenishLoading = ref(false)
 const selectedFilter = ref(filters[0].label)
 const selectedItems = ref([])
 const previewData = ref(createEmptyPreview())
@@ -212,6 +220,7 @@ const resetPreview = () => {
   previewData.value = createEmptyPreview()
   loading.value = false
   deleteLoading.value = false
+  replenishLoading.value = false
   clearSelection()
 }
 
@@ -262,6 +271,17 @@ const deleteTorrentCache = async () => {
     }
   } finally {
     deleteLoading.value = false
+  }
+}
+
+const replenish = async () => {
+  replenishLoading.value = true
+  try {
+    const res = await http.replenishMissingEpisodes(props.ani)
+    ElMessage.success(res.message)
+    await loadPreview()
+  } finally {
+    replenishLoading.value = false
   }
 }
 

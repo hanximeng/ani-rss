@@ -33,9 +33,19 @@ public class RssTask implements BaseTask {
     }
 
     public static void syncDownload(List<Ani> aniList) {
+        syncDownload(aniList, false);
+    }
+
+    /**
+     * 同步下载
+     *
+     * @param aniList   订阅列表
+     * @param replenish 是否补齐缺失集
+     */
+    public static void syncDownload(List<Ani> aniList, Boolean replenish) {
         syncLock(lock -> lock.set(true));
         try {
-            download(aniList);
+            download(aniList, replenish);
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
             log.error(message, e);
@@ -60,6 +70,16 @@ public class RssTask implements BaseTask {
     }
 
     public static void download(List<Ani> aniList) {
+        download(aniList, false);
+    }
+
+    /**
+     * 下载
+     *
+     * @param aniList   订阅列表
+     * @param replenish 是否补齐缺失集
+     */
+    public static void download(List<Ani> aniList, Boolean replenish) {
         DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
         if (!TorrentUtil.login()) {
             return;
@@ -83,7 +103,7 @@ public class RssTask implements BaseTask {
             }
 
             try {
-                downloadService.downloadAni(ani);
+                downloadService.downloadAni(ani, replenish);
             } catch (Exception e) {
                 String message = ExceptionUtils.getMessage(e);
                 log.error("{} {}", title, message);

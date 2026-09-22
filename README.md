@@ -18,13 +18,69 @@
 [![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github)](https://github.com/hanximeng/ani-rss)
 ![GitHub License](https://img.shields.io/github/license/hanximeng/ani-rss)
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/hanximeng/ani-rss?color=blue&label=download&sort=semver)](https://github.com/hanximeng/ani-rss/releases/latest)
-[![GitHub all releases](https://img.shields.io/github/downloads/hanximeng/ani-rss/total?color=blue&label=github%20downloads)](https://docs.wushuo.top/history)
-[![telegram](https://img.shields.io/static/v1?label=telegram&amp;message=ani-rss&amp;color=blue)](https://t.me/ani_rss)
+[![GitHub all releases](https://img.shields.io/github/downloads/hanximeng/ani-rss/total?color=blue&label=github%20downloads)](https://github.com/hanximeng/ani-rss/releases)
+[![ghcr.io](https://img.shields.io/badge/ghcr.io-hanximeng%2Fani--rss-2496ED?logo=docker&logoColor=white)](https://github.com/hanximeng/ani-rss/pkgs/container/ani-rss)
+[![telegram](https://img.shields.io/static/v1?label=telegram&amp;message=ani_rss&amp;color=blue)](https://t.me/ani_rss)
 
 </div>
 
 ![image](https://github.com/wushuo894/ani-rss-docs/raw/main/docs/image/screenshot/screenshot.webp#gh-light-mode-only)
 ![image](https://github.com/wushuo894/ani-rss-docs/raw/main/docs/image/screenshot/screenshot-dark.webp#gh-dark-mode-only)
+
+## 本仓库说明
+
+本仓库是 [wushuo894/ani-rss](https://github.com/wushuo894/ani-rss) 的分支，在上游功能基础上做了以下增强，上游的使用文档依然适用（见上方链接）。
+
+### 本仓库特有改动
+
+| 改动 | 说明 |
+|---|---|
+| **GitHub 加速** | 设置 → 其他中新增「GitHub 加速」配置（默认 `https://gh-proxy.org/`）。当 `github.com` 无法直连时，程序更新与 WebUI 更新的下载链接会自动套用该加速前缀；留空即关闭 |
+| **通知渠道扩展** | 新增 **钉钉 / 企业微信 / OneBot / 飞书** 四种通知渠道（原有的邮件、Telegram、Bark、Server酱、WebHook、系统通知等全部保留） |
+| **bgm.tv 镜像可配置** | 设置 → Bangumi 中新增「Bgm主站」「Bgm图片」，与「BgmApi」一起构成 **API / 主站 / 图片** 三项独立可配置，方便使用镜像站 |
+| **更新检测源** | 检查更新指向本仓库，与上游互不影响 |
+| **镜像仓库** | Docker 镜像仅发布到 **ghcr.io**，不依赖 Docker Hub |
+| **自动构建发布** | 推送到 `main` 自动构建并发布 `jar` / `exe` / `dmg`，同时推送多架构 Docker 镜像 |
+| **无 git 构建兼容** | 从源码 ZIP 下载（无 `.git` 目录）构建出的产物也能正常启动 |
+
+### Docker 镜像
+
+镜像地址（支持 `linux/amd64` 与 `linux/arm64`）：
+
+```bash
+docker pull ghcr.io/hanximeng/ani-rss:latest
+```
+
+| 标签 | 说明 |
+|---|---|
+| `ghcr.io/hanximeng/ani-rss:latest` | 最新版（Temurin JRE） |
+| `ghcr.io/hanximeng/ani-rss:<版本>` | 指定版本，如 `v3.2.37` |
+| `ghcr.io/hanximeng/ani-rss:openj9` | 最新版（OpenJ9，内存占用更低） |
+| `ghcr.io/hanximeng/ani-rss:<版本>-openj9` | 指定版本 + OpenJ9 |
+
+运行示例：
+
+```bash
+docker run -d \
+  --name ani-rss \
+  -p 7789:7789 \
+  -v /path/to/config:/config \
+  -e TZ=Asia/Shanghai \
+  --restart unless-stopped \
+  ghcr.io/hanximeng/ani-rss:latest
+```
+
+> 首次推送的 ghcr 包默认为**私有**。若需匿名拉取，请到
+> `https://github.com/users/hanximeng/packages/container/ani-rss/settings`
+> 将可见性改为 **Public**；保持私有则拉取前需先 `docker login ghcr.io`。
+
+### 其他安装方式
+
+除 Docker 外，也可直接从 [Releases](https://github.com/hanximeng/ani-rss/releases) 下载：
+
+- `ani-rss.jar` — 需自行准备 Java 25 运行环境
+- `ani-rss.exe` — Windows 可执行文件
+- `ani-rss.dmg` — macOS 安装包
 
 ## 其他
 
@@ -82,32 +138,3 @@ qBittorrent、Transmission、Aria2 等)推送任务指令。工具本身不具�
     - 因网络政策、技术更新或源站限制造成的服务中断或功能失效
 - 例外追责
     - 若监管机构认定本工具违背技术中立原则，开发者保留终止服务的权利
-
-## Sponsors
-
-<img src="https://docs.wushuo.top/assets/sharon-networks.5DoCcrXN.webp" width="300" alt="Sharon Networks"/>
-
-### 🚀 Sponsored by SharonNetworks
-
-本项目的构建与发布环境由 SharonNetworks 提供支持 —— 专注亚太顶级回国优化线路，高带宽、低延迟直连中国大陆，内置强大高防 DDoS
-清洗能力。
-
-SharonNetworks 为您的业务起飞保驾护航！
-
-#### ✨ 服务优势
-
-* 亚太三网回程优化直连中国大陆，下载快到飞起
-* 超大带宽 + 抗攻击清洗服务，保障业务安全稳定
-* 多节点覆盖（香港、新加坡、日本、台湾、韩国）
-* 高防护力、高速网络；港/日/新 CDN 即将上线
-
-想体验同款构建环境？欢迎 [访问 Sharon 官网](https://sharon.io) 或 [加入 Telegram 群组](https://t.me/SharonNetwork)
-了解更多并申请赞助。
-
-[<img alt="image" src="https://github.com/wushuo894/ani-rss-docs/raw/main/docs/image/support.nodeget.com_page_promotion_id%3D88.webp" width="300"/>](https://yxvm.com/)
-
-[NodeSupport](https://github.com/NodeSeekDev/NodeSupport) 赞助了本项目
-
-[![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
-
-

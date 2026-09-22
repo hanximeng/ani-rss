@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '**/*.md'
   workflow_dispatch:
 
 # 仅发布到 hanximeng/ani-rss（GitHub Release / ghcr.io）

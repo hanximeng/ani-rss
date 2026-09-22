@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '**/*.md'
   workflow_dispatch:
 
 # 仅发布到 hanximeng/ani-rss，严禁推送到 wushuo894/ani-rss
